@@ -1,0 +1,35 @@
+@import url(./reset.scss);
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+}
+html,
+body,
+#app {
+  height: 100%;
+
+}
+body {
+  background-image: url(@/assets/bg.jpg);
+  background-attachment: fixed;
+  background-size: cover;
+  width: 100%;
+}
+
+.btn-success {
+  background-color: #1abc9c;
+  color: #fff;
+}
+.btn-success:hover {
+  background-color: #16a085;
+}
+.btn-danger {
+  background-color: #e74c3c;
+  color: #fff;
+}
+.btn-danger:hover {
+  background-color: #c0392b;
+}
