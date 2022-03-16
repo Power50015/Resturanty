@@ -46,11 +46,6 @@ import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
 const auth = useAuthStore();
 const aside = ref(false);
-
-function asideShow(){
-  
-  aside.value = !aside.value;
-}
 </script>
 
 <style lang="scss" scoped>
