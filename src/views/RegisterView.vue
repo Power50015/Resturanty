@@ -105,7 +105,7 @@
         </button>
         <br />
         <router-link to="login" class="mx-3 text-info"
-          >عمل حساب مطعم</router-link
+          >لدى حساب بالفعل</router-link
         >
       </form>
     </div>
@@ -126,14 +126,14 @@ import {
 const router = useRouter();
 const auth = useAuthStore();
 
-let userName = ref("");
-let userEmail = ref("");
-let userPassword = ref("");
-let userDes = ref("");
-let userArea = ref("cairo");
-let userAdrres = ref("");
-let userImg = ref("");
-let userPhone = ref("");
+const userName = ref("");
+const userEmail = ref("");
+const userPassword = ref("");
+const userDes = ref("");
+const userArea = ref("cairo");
+const userAdrres = ref("");
+const userImg = ref("");
+const userPhone = ref("");
 
 const btn = ref(false);
 const imgUpload = ref(0);

@@ -1,6 +1,6 @@
 <template>
-    <AsideComponents />
-    <RouterView />
+  <AsideComponents v-if="auth.isLogin" />
+  <RouterView v-if="auth.isloaded" />
 </template>
 
 <script setup lang="ts">

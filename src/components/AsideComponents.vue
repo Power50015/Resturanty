@@ -1,9 +1,9 @@
 <template>
-  <button class="d-lg-none d-block aside-btn" @click="aside = !aside">
+  <button class="d-xxl-none d-block aside-btn" @click="aside = !aside">
     <img src="@/assets/menu.png" v-if="!aside">
     <img src="@/assets/close.png" v-if="aside">
   </button>
-  <nav class="col-md-2 d-lg-block sidebar py-3" :class="{ 'd-none': !aside }">
+  <nav class="col-md-2 d-xxl-block sidebar py-3" :class="{ 'd-none': !aside }">
     <div class="sidebar-sticky">
       <ul class="nav flex-column px-3">
         <li class="nav-item mb-5">
@@ -29,9 +29,12 @@
               </div>
             </div>
           </router-link>
+          <button class="btn btn-danger" @click="auth.logout"
+          >تسجيل الخروج</button
+        >
         </li>
         <li class="nav-item">
-          <router-link to="/"> المنيو </router-link>
+          <router-link to="/menu"> المنيو </router-link>
         </li>
         <li class="nav-item">
           <router-link to="/"> الطلبات </router-link>

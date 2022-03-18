@@ -32,6 +32,7 @@ const db = getFirestore();
 
 // wait until auth is ready
 const unsub = await onAuthStateChanged(auth, async (user) => {
+  const auth = useAuthStore();
   if (user) {
     const q = query(
       collection(db, "restaurants"),
@@ -40,8 +41,7 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
 
     const querySnapshot = await getDocs(q);
 
-    querySnapshot.forEach((doc) => {
-      const auth = useAuthStore();
+    await querySnapshot.forEach((doc) => {
       auth.restaurantId = doc.id;
       auth.isLogin = true;
       auth.restaurantName = doc.data().name;
@@ -51,14 +51,19 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
       auth.restaurantDes = doc.data().des;
       auth.restaurantImg = doc.data().img;
       auth.restaurantPhone = doc.data().phone;
+      auth.isloaded = true;
     });
+  } else {
+    auth.isloaded = true;
   }
+
   unsub();
 });
 
 export const useAuthStore = defineStore({
   id: "auth",
   state: () => ({
+    isloaded: false,
     isLogin: false,
     restaurantId: "",
     restaurantName: "",
@@ -81,6 +86,7 @@ export const useAuthStore = defineStore({
       phone: string,
       img: string
     ): any {
+      this.isloaded = false;
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
@@ -104,6 +110,7 @@ export const useAuthStore = defineStore({
             this.restaurantDes = des;
             this.restaurantImg = img;
             this.restaurantPhone = phone;
+            this.isloaded = true;
           });
         })
         .catch((error) => {
@@ -111,22 +118,32 @@ export const useAuthStore = defineStore({
           const errorMessage = error.message;
           console.log(errorCode);
           console.log(errorMessage);
+          this.isloaded = true;
         });
       return this.isLogin;
     },
     login(email: string, password: string) {
+      this.isloaded = false;
       signInWithEmailAndPassword(auth, email, password)
         .then(async () => {
           const q = query(
-            collection(db, "hospitals"),
+            collection(db, "restaurants"),
             where("email", "==", email)
           );
+
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach((doc) => {
-            this.isLogin = true;
-            this.name = doc.data().name;
-            this.email = doc.data().email;
-            this.userId = doc.id;
+            const auth = useAuthStore();
+            auth.restaurantId = doc.id;
+            auth.isLogin = true;
+            auth.restaurantName = doc.data().name;
+            auth.restaurantEmail = doc.data().email;
+            auth.restaurantAdrres = doc.data().adrres;
+            auth.restaurantArea = doc.data().area;
+            auth.restaurantDes = doc.data().des;
+            auth.restaurantImg = doc.data().img;
+            auth.restaurantPhone = doc.data().phone;
+            auth.isloaded = true;
           });
         })
         .catch((error) => {
@@ -134,13 +151,19 @@ export const useAuthStore = defineStore({
           const errorMessage = error.message;
           console.log(errorCode);
           console.log(errorMessage);
+          this.isloaded = true;
         });
     },
     logout() {
       signOut(auth).then(() => {
         this.isLogin = false;
-        this.name = "";
-        this.email = "";
+        this.restaurantId = "";
+        this.restaurantName = "";
+        this.restaurantAdrres = "";
+        this.restaurantArea = "";
+        this.restaurantDes = "";
+        this.restaurantImg = "";
+        this.restaurantPhone = "";
       });
     },
     async editUser(
@@ -193,6 +216,33 @@ export const useAuthStore = defineStore({
           });
         }
       );
+    },
+    addMeal(
+      mealTitle: string,
+      mealImg: string,
+      mealPrice: string,
+      mealSection: string,
+      mealDes: string
+    ): any {
+      this.isloaded = false;
+      addDoc(collection(db, "meals"), {
+        mealTitle: mealTitle,
+        mealImg: mealImg,
+        mealSection: mealSection,
+        mealPrice: mealPrice,
+        mealDes: mealDes,
+        mealrestaurant:this.restaurantEmail
+      })
+        .then((user) => {
+          this.isloaded = true;
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode);
+          console.log(errorMessage);
+          this.isloaded = true;
+        });
     },
   },
 });

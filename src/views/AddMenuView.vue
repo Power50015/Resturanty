@@ -1,7 +1,6 @@
 <template>
   <main class="home-view">
     <div class="content">
-      <h2 class="border-bottom mb-3 d-inline-block p-3">الصفحه الشخصيه</h2>
       <div class="logo-section">
         <img
           :src="auth.restaurantImg"
@@ -9,29 +8,20 @@
           height="200"
           class="rounded-circle"
         />
+        <h1>أضف وجبه للمنيو</h1>
       </div>
-      <form @submit.prevent="SaveUser()" class="pb-5">
+      <form @submit.prevent="SaveMeal()" class="py-5">
         <div class="mb-3">
-          <label for="inputName" class="form-label">أسم المستخدم</label>
+          <label for="mealTitle" class="form-label">أسم الوجبه</label>
           <input
             type="text"
             class="form-control"
-            id="inputName"
-            v-model="userName"
+            id="mealTitle"
+            v-model="mealTitle"
           />
         </div>
         <div class="mb-3">
-          <label for="inputEmail" class="form-label">البريد الإلكترونى</label>
-          <input
-            type="email"
-            class="form-control"
-            id="inputEmail"
-            :value="auth.restaurantEmail"
-            disabled
-          />
-        </div>
-        <div class="mb-3">
-          <label for="formFile" class="form-label">الصورة الشخصيه</label>
+          <label for="formFile" class="form-label">صورة الوجبه</label>
           <div class="flex">
             <h6 class="mb-3 text-white">
               حاله رفع الصوره : <span v-if="imgUpload == 100">أكتمل</span>
@@ -57,46 +47,43 @@
           />
         </div>
         <div class="mb-3">
-          <label for="inputArea" class="form-label">المنطقه</label>
-          <select class="form-select" v-model="userArea" id="inputArea">
-            <option disabled selected value="">حدد المطقه</option>
-            <option value="shrouq">الشروق</option>
-            <option value="ismailia">إسماعليه</option>
-            <option value="suze">السويس</option>
-            <option value="cairo">القاهرة</option>
-            <option value="geza">الجيزة</option>
+          <label for="mealSection" class="form-label">القسم</label>
+          <select class="form-select" v-model="mealSection" id="mealSection">
+            <option disabled value="">حدد القسم</option>
+            <option value="sea">مأكولات بحريه</option>
+            <option value="drink">مشروبات</option>
+            <option value="pasta">الباستا و المكرونه</option>
+            <option value="grill">مشويات</option>
+            <option value="sweet">حلويات</option>
+            <option value="bakery">مخبوزات</option>
+            <option value="fast">وجبات سريعه</option>
           </select>
         </div>
         <div class="mb-3">
-          <label for="userAdrres" class="form-label">العنوان</label>
+          <label for="mealPrice" class="form-label">السعر</label>
           <input
-            type="text"
+            type="number"
             class="form-control"
-            id="userAdrres"
-            v-model="userAdrres"
+            id="mealPrice"
+            v-model="mealPrice"
+            min="0"
           />
         </div>
         <div class="mb-3">
-          <label for="userPhone" class="form-label">الهاتف</label>
-          <input
-            type="text"
-            class="form-control"
-            id="userPhone"
-            v-model="userPhone"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="inputDes" class="form-label">نبذه شخصيه</label>
+          <label for="mealDes" class="form-label">وصف الوجبه</label>
           <textarea
             class="form-control"
-            id="inputDes"
-            v-model="userDes"
+            id="mealDes"
+            v-model="mealDes"
           ></textarea>
         </div>
-        <button type="submit" class="btn btn-success mt-5 w-100">
-          تعديل بيانات الحساب
+        <button
+          type="submit"
+          class="btn btn-success mt-5 w-100"
+          :disabled="!btn"
+        >
+          حفظ الوجبه
         </button>
-        <br />
       </form>
     </div>
   </main>
@@ -112,26 +99,34 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+
 const router = useRouter();
 const auth = useAuthStore();
 
-const userName = ref(auth.restaurantName);
-const userDes = ref(auth.restaurantDes);
-const userArea = ref(auth.restaurantArea);
-const userAdrres = ref(auth.restaurantAdrres);
-const userImg = ref(auth.restaurantImg);
-const userPhone = ref(auth.restaurantPhone);
+const mealTitle = ref("");
+const mealImg = ref("");
+const mealPrice = ref("");
+const mealSection = ref("");
+const mealDes = ref("");
+
+const btn = ref(false);
 const imgUpload = ref(0);
 
-function SaveUser() {
-  auth.editUser(
-    userName.value,
-    userDes.value,
-    userArea.value,
-    userAdrres.value,
-    userPhone.value,
-    userImg.value
-  );
+async function SaveMeal() {
+    await auth.addMeal(
+      mealTitle.value,
+      mealImg.value,
+      mealPrice.value,
+      mealSection.value,
+      mealDes.value,
+    );
+    mealTitle.value = "";
+    mealSection.value = "";
+    mealImg.value = "";
+    mealPrice.value = "";
+    mealDes.value = "";
+  btn.value = false;
+  router.push("/menu");
 }
 
 function DetectFiles(img) {
@@ -152,7 +147,9 @@ function DetectFiles(img) {
     },
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
-        userImg.value = URL;
+        btn.value = true;
+        console.log("File available at", URL);
+        mealImg.value = URL;
       });
     }
   );
@@ -162,12 +159,6 @@ function DetectFiles(img) {
 <style lang="scss" scoped>
 h1 {
   font-size: 4rem;
-  color: #fff;
-  font-weight: bolder;
-}
-
-h2 {
-  font-size: 3rem;
   color: #fff;
   font-weight: bolder;
 }
@@ -183,6 +174,9 @@ form {
   text-align: right;
   .form-label {
     color: #fff;
+  }
+  #mealDes{
+      height: 300px;
   }
 }
 .home-view {
