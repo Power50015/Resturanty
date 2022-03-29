@@ -51,6 +51,10 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
       auth.restaurantDes = doc.data().des;
       auth.restaurantImg = doc.data().img;
       auth.restaurantPhone = doc.data().phone;
+      auth.restaurantType = doc.data().type;
+      auth.restaurantStartTime = doc.data().startTime;
+      auth.restaurantEndTime = doc.data().endTime;
+      auth.restaurantMap = doc.data().map;
       auth.isloaded = true;
     });
   } else {
@@ -73,6 +77,10 @@ export const useAuthStore = defineStore({
     restaurantAdrres: "",
     restaurantImg: "",
     restaurantPhone: "",
+    restaurantType: "",
+    restaurantStartTime: "",
+    restaurantEndTime: "",
+    restaurantMap: "",
     fileUpload: 0,
   }),
   actions: {
@@ -84,7 +92,11 @@ export const useAuthStore = defineStore({
       area: string,
       adrres: string,
       phone: string,
-      img: string
+      img: string,
+      type: string,
+      startTime: string,
+      endTime: string,
+      map: string
     ): any {
       this.isloaded = false;
       createUserWithEmailAndPassword(auth, email, password)
@@ -100,6 +112,10 @@ export const useAuthStore = defineStore({
             des: des,
             img: img,
             phone: phone,
+            type: type,
+            startTime: startTime,
+            endTime: endTime,
+            map: map
           }).then((user) => {
             this.restaurantId = user.id;
             this.isLogin = true;
@@ -110,6 +126,10 @@ export const useAuthStore = defineStore({
             this.restaurantDes = des;
             this.restaurantImg = img;
             this.restaurantPhone = phone;
+            this.restaurantType = type;
+            this.restaurantStartTime = startTime;
+            this.restaurantEndTime = endTime;
+            this.restaurantMap = map;
             this.isloaded = true;
           });
         })
@@ -143,6 +163,10 @@ export const useAuthStore = defineStore({
             auth.restaurantDes = doc.data().des;
             auth.restaurantImg = doc.data().img;
             auth.restaurantPhone = doc.data().phone;
+            this.restaurantType = type;
+            this.restaurantStartTime = startTime;
+            this.restaurantEndTime = endTime;
+            this.restaurantMap = map;
             auth.isloaded = true;
           });
         })
@@ -159,11 +183,16 @@ export const useAuthStore = defineStore({
         this.isLogin = false;
         this.restaurantId = "";
         this.restaurantName = "";
+        this.restaurantEmail = "";
         this.restaurantAdrres = "";
         this.restaurantArea = "";
         this.restaurantDes = "";
         this.restaurantImg = "";
         this.restaurantPhone = "";
+        this.restaurantType = "";
+        this.restaurantStartTime = "";
+        this.restaurantEndTime = "";
+        this.restaurantMap = "";
       });
     },
     async editUser(
@@ -231,7 +260,7 @@ export const useAuthStore = defineStore({
         mealSection: mealSection,
         mealPrice: mealPrice,
         mealDes: mealDes,
-        mealrestaurant:this.restaurantEmail
+        mealrestaurant: this.restaurantEmail
       })
         .then((user) => {
           this.isloaded = true;
