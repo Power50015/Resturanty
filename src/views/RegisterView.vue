@@ -7,7 +7,7 @@
       </div>
       <form @submit.prevent="SaveUser()" class="py-5">
         <div class="mb-3">
-          <label for="inputName" class="form-label">أسم المستخدم</label>
+          <label for="inputName" class="form-label">أسم المطعم</label>
           <input
             type="text"
             class="form-control"

@@ -4,27 +4,27 @@
       <div class="logo-section">
         <img
           :src="auth.restaurantImg"
-          width="200"
-          height="200"
+          width="100"
+          height="100"
           class="rounded-circle"
         />
-        <h1>المنيو</h1>
+        <h1 class="mb-3">المنيو</h1>
+         <router-link
+          to="addmenu"
+          class="btn btn-success mx-3"
+          >أضف للمنيو</router-link
+        >
       </div>
       <div class="container">
         <div class="row">
-          <div class="col-12 col-md-6 mb-3" v-for="i in 10" :key="i.index">
+          <div class="col-12 col-md-6 mb-3" v-for="i in menuData" :key="i.index">
             <div class="card w-100" style="width: 18rem">
-              <img :src="auth.restaurantImg" class="card-img-top" alt="..." />
+              <img :src="i.mealImg" class="card-img-top" :alt="i.mealTitle" />
               <div class="card-body">
-                <h5 class="card-title">Card title</h5>
+                <h5 class="card-title">{{i.mealTitle}}</h5>
                 <p class="card-text">
-                  Some quick example text to build on the card title and make up
-                  the bulk of the card's content.
+                  {{i.mealDes}}
                 </p>
-                <button class="btn btn-danger" >
-                  تسجيل الخروج
-                </button>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
               </div>
             </div>
           </div>
@@ -36,17 +36,27 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import {
-  getStorage,
-  ref as refire,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import app from "@/firebase";
+import { getFirestore } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const router = useRouter();
 const auth = useAuthStore();
+const db = getFirestore();
+
+const menuData = reactive([]);
+
+getImageData();
+async function getImageData() {
+  menuData.length = 0;
+  const q = query(collection(db, "meals"), where("mealrestaurant", "==", auth.restaurantEmail));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    menuData.push(doc.data());
+  });
+}
 </script>
 
 <style lang="scss" scoped>

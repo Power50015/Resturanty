@@ -56,6 +56,8 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
       auth.restaurantEndTime = doc.data().endTime;
       auth.restaurantMap = doc.data().map;
       auth.isloaded = true;
+
+
     });
   } else {
     auth.isloaded = true;
@@ -163,10 +165,10 @@ export const useAuthStore = defineStore({
             auth.restaurantDes = doc.data().des;
             auth.restaurantImg = doc.data().img;
             auth.restaurantPhone = doc.data().phone;
-            this.restaurantType = type;
-            this.restaurantStartTime = startTime;
-            this.restaurantEndTime = endTime;
-            this.restaurantMap = map;
+            this.restaurantType = doc.data().type;
+            this.restaurantStartTime = doc.data().startTime;
+            this.restaurantEndTime = doc.data().endTime;
+            this.restaurantMap = doc.data().map;
             auth.isloaded = true;
           });
         })
@@ -222,42 +224,16 @@ export const useAuthStore = defineStore({
         this.restaurantPhone = phone;
       });
     },
-    async uploadFile(file: any) {
-      console.log(file);
-      const fileData = file[0];
-
-      const storageRef = ref(storage, `${fileData.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, fileData);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          this.fileUpload = Math.floor(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-        },
-        (error) => {
-          alert(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
-            return URL;
-          });
-        }
-      );
-    },
     addMeal(
       mealTitle: string,
       mealImg: string,
       mealPrice: string,
-      mealSection: string,
       mealDes: string
     ): any {
       this.isloaded = false;
       addDoc(collection(db, "meals"), {
         mealTitle: mealTitle,
         mealImg: mealImg,
-        mealSection: mealSection,
         mealPrice: mealPrice,
         mealDes: mealDes,
         mealrestaurant: this.restaurantEmail

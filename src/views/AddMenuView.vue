@@ -47,19 +47,6 @@
           />
         </div>
         <div class="mb-3">
-          <label for="mealSection" class="form-label">القسم</label>
-          <select class="form-select" v-model="mealSection" id="mealSection">
-            <option disabled value="">حدد القسم</option>
-            <option value="sea">مأكولات بحريه</option>
-            <option value="drink">مشروبات</option>
-            <option value="pasta">الباستا و المكرونه</option>
-            <option value="grill">مشويات</option>
-            <option value="sweet">حلويات</option>
-            <option value="bakery">مخبوزات</option>
-            <option value="fast">وجبات سريعه</option>
-          </select>
-        </div>
-        <div class="mb-3">
           <label for="mealPrice" class="form-label">السعر</label>
           <input
             type="number"
@@ -106,7 +93,6 @@ const auth = useAuthStore();
 const mealTitle = ref("");
 const mealImg = ref("");
 const mealPrice = ref("");
-const mealSection = ref("");
 const mealDes = ref("");
 
 const btn = ref(false);
@@ -117,11 +103,9 @@ async function SaveMeal() {
       mealTitle.value,
       mealImg.value,
       mealPrice.value,
-      mealSection.value,
       mealDes.value,
     );
     mealTitle.value = "";
-    mealSection.value = "";
     mealImg.value = "";
     mealPrice.value = "";
     mealDes.value = "";
