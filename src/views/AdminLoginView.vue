@@ -47,13 +47,13 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const auth = useAuthStore();
 
-const userEmail = ref("jsr2@jsr2.com");
-const userPassword = ref("jsr2@jsr2.com");
+const userEmail = ref("admin@admin.com");
+const userPassword = ref("admin@admin.com");
 
 const btn = ref(false);
 
 async function LoginUser() {
-    await auth.login(
+    await auth.adminLogin(
       userEmail.value,
       userPassword.value,
     );

@@ -1,5 +1,5 @@
 <template>
-  <AsideComponents v-if="auth.isLogin" />
+  <AsideComponents v-if="auth.userType == 'restaurants'" />
   <RouterView v-if="auth.isloaded" />
 </template>
 

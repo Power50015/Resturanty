@@ -41,24 +41,50 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
 
     const querySnapshot = await getDocs(q);
 
-    await querySnapshot.forEach((doc) => {
-      auth.restaurantId = doc.id;
-      auth.isLogin = true;
-      auth.restaurantName = doc.data().name;
-      auth.restaurantEmail = doc.data().email;
-      auth.restaurantAdrres = doc.data().adrres;
-      auth.restaurantArea = doc.data().area;
-      auth.restaurantDes = doc.data().des;
-      auth.restaurantImg = doc.data().img;
-      auth.restaurantPhone = doc.data().phone;
-      auth.restaurantType = doc.data().type;
-      auth.restaurantStartTime = doc.data().startTime;
-      auth.restaurantEndTime = doc.data().endTime;
-      auth.restaurantMap = doc.data().map;
-      auth.isloaded = true;
+    if (querySnapshot.empty) {
+      const q = query(
+        collection(db, "admin"),
+        where("email", "==", user.email)
+      );
 
+      const querySnapshot = await getDocs(q);
 
-    });
+      querySnapshot.forEach((doc) => {
+        auth.restaurantId = doc.id;
+        auth.isLogin = true;
+        auth.restaurantName = doc.data().name;
+        auth.restaurantEmail = doc.data().email;
+        auth.restaurantAdrres = doc.data().adrres;
+        auth.restaurantArea = doc.data().area;
+        auth.restaurantDes = doc.data().des;
+        auth.restaurantImg = doc.data().img;
+        auth.restaurantPhone = doc.data().phone;
+        auth.restaurantType = doc.data().type;
+        auth.restaurantStartTime = doc.data().startTime;
+        auth.restaurantEndTime = doc.data().endTime;
+        auth.restaurantMap = doc.data().map;
+        auth.userType = "admin";
+        auth.isloaded = true;
+      });
+    } else {
+      querySnapshot.forEach((doc) => {
+        auth.restaurantId = doc.id;
+        auth.isLogin = true;
+        auth.restaurantName = doc.data().name;
+        auth.restaurantEmail = doc.data().email;
+        auth.restaurantAdrres = doc.data().adrres;
+        auth.restaurantArea = doc.data().area;
+        auth.restaurantDes = doc.data().des;
+        auth.restaurantImg = doc.data().img;
+        auth.restaurantPhone = doc.data().phone;
+        auth.restaurantType = doc.data().type;
+        auth.restaurantStartTime = doc.data().startTime;
+        auth.restaurantEndTime = doc.data().endTime;
+        auth.restaurantMap = doc.data().map;
+        auth.userType = "restaurants";
+        auth.isloaded = true;
+      });
+    }
   } else {
     auth.isloaded = true;
   }
@@ -84,7 +110,7 @@ export const useAuthStore = defineStore({
     restaurantEndTime: "",
     restaurantMap: "",
     fileUpload: 0,
-    userType:""
+    userType: ""
   }),
   actions: {
     addUser(
@@ -134,6 +160,7 @@ export const useAuthStore = defineStore({
             this.restaurantEndTime = endTime;
             this.restaurantMap = map;
             this.isloaded = true;
+            this.userType = "restaurants";
           });
         })
         .catch((error) => {
@@ -156,21 +183,21 @@ export const useAuthStore = defineStore({
 
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach((doc) => {
-            const auth = useAuthStore();
-            auth.restaurantId = doc.id;
-            auth.isLogin = true;
-            auth.restaurantName = doc.data().name;
-            auth.restaurantEmail = doc.data().email;
-            auth.restaurantAdrres = doc.data().adrres;
-            auth.restaurantArea = doc.data().area;
-            auth.restaurantDes = doc.data().des;
-            auth.restaurantImg = doc.data().img;
-            auth.restaurantPhone = doc.data().phone;
+            this.restaurantId = doc.id;
+            this.isLogin = true;
+            this.restaurantName = doc.data().name;
+            this.restaurantEmail = doc.data().email;
+            this.restaurantAdrres = doc.data().adrres;
+            this.restaurantArea = doc.data().area;
+            this.restaurantDes = doc.data().des;
+            this.restaurantImg = doc.data().img;
+            this.restaurantPhone = doc.data().phone;
             this.restaurantType = doc.data().type;
             this.restaurantStartTime = doc.data().startTime;
             this.restaurantEndTime = doc.data().endTime;
             this.restaurantMap = doc.data().map;
-            auth.isloaded = true;
+            this.isloaded = true;
+            this.userType = "restaurants";
           });
         })
         .catch((error) => {
@@ -196,7 +223,7 @@ export const useAuthStore = defineStore({
             this.restaurantName = doc.data().name;
             this.restaurantEmail = doc.data().email;
             this.isloaded = true;
-            this.userType ="admin";
+            this.userType = "admin";
           });
         })
         .catch((error) => {
@@ -222,7 +249,7 @@ export const useAuthStore = defineStore({
         this.restaurantStartTime = "";
         this.restaurantEndTime = "";
         this.restaurantMap = "";
-        this.userType ="admin";
+        this.userType = "";
       });
     },
     async editUser(
