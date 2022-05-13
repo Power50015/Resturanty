@@ -1,7 +1,7 @@
 <template>
   <button class="d-xxl-none d-block aside-btn" @click="aside = !aside">
-    <img src="@/assets/menu.png" v-if="!aside">
-    <img src="@/assets/close.png" v-if="aside">
+    <img src="@/assets/menu.png" v-if="!aside" />
+    <img src="@/assets/close.png" v-if="aside" />
   </button>
   <nav class="col-md-2 d-xxl-block sidebar py-3" :class="{ 'd-none': !aside }">
     <div class="sidebar-sticky">
@@ -29,15 +29,13 @@
               </div>
             </div>
           </router-link>
-          <button class="btn btn-danger" @click="auth.logout"
-          >تسجيل الخروج</button
-        >
+          <button class="btn btn-danger" @click="logout">تسجيل الخروج</button>
         </li>
         <li class="nav-item">
           <router-link to="/menu"> المنيو </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/"> الطلبات </router-link>
+          <router-link to="/order"> الطلبات </router-link>
         </li>
       </ul>
     </div>
@@ -47,8 +45,14 @@
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/auth";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 const auth = useAuthStore();
+const router = useRouter();
 const aside = ref(false);
+function logout() {
+  auth.logout();
+  router.push("/");
+}
 </script>
 
 <style lang="scss" scoped>
@@ -60,7 +64,7 @@ const aside = ref(false);
   right: 15px;
   z-index: 999;
   background: #eee;
-  img{
+  img {
     width: 25px;
     height: 25px;
     margin: 5px;

@@ -28,6 +28,11 @@ const router = createRouter({
       name: "AddMenu",
       component: () => import("../views/AddMenuView.vue"),
     },
+    {
+      path: "/order",
+      name: "Order",
+      component: () => import("../views/OrderView.vue"),
+    },
   ],
 });
 

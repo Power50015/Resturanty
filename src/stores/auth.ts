@@ -84,6 +84,7 @@ export const useAuthStore = defineStore({
     restaurantEndTime: "",
     restaurantMap: "",
     fileUpload: 0,
+    userType:""
   }),
   actions: {
     addUser(
@@ -180,6 +181,32 @@ export const useAuthStore = defineStore({
           this.isloaded = true;
         });
     },
+    adminLogin(email: string, password: string) {
+      this.isloaded = false;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(async () => {
+          const q = query(
+            collection(db, "admin"),
+            where("email", "==", email)
+          );
+
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            this.isLogin = true;
+            this.restaurantName = doc.data().name;
+            this.restaurantEmail = doc.data().email;
+            this.isloaded = true;
+            this.userType ="admin";
+          });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode);
+          console.log(errorMessage);
+          this.isloaded = true;
+        });
+    },
     logout() {
       signOut(auth).then(() => {
         this.isLogin = false;
@@ -195,6 +222,7 @@ export const useAuthStore = defineStore({
         this.restaurantStartTime = "";
         this.restaurantEndTime = "";
         this.restaurantMap = "";
+        this.userType ="admin";
       });
     },
     async editUser(
@@ -205,8 +233,6 @@ export const useAuthStore = defineStore({
       phone: string,
       img: string
     ) {
-      console.log(this.restaurantId);
-
       await setDoc(doc(db, "restaurants", this.restaurantId), {
         name: name,
         email: this.restaurantEmail,

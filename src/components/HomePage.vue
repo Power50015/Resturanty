@@ -14,6 +14,11 @@
         <router-link to="login" class="btn btn-danger"
           >تسجيل الدخول</router-link
         >
+        <router-link
+          to="admin-login"
+          class="btn btn-success mx-3"
+          >تسجيل أدمن</router-link
+        >
       </div>
     </div>
   </main>
