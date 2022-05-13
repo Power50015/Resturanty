@@ -1,13 +1,18 @@
 <template>
   <main class="home-view">
     <div class="content">
+      <h2 class="border-bottom mb-3 d-inline-block p-3">الصفحه الشخصيه</h2>
       <div class="logo-section">
-        <img src="@/assets/chef_only.png" width="250" />
-        <h1>Resturanty</h1>
+        <img
+          :src="auth.restaurantImg"
+          width="200"
+          height="200"
+          class="rounded-circle"
+        />
       </div>
-      <form @submit.prevent="SaveUser()" class="py-5">
+      <form @submit.prevent="SaveUser()" class="pb-5">
         <div class="mb-3">
-          <label for="inputName" class="form-label">أسم المطعم</label>
+          <label for="inputName" class="form-label">أسم المستخدم</label>
           <input
             type="text"
             class="form-control"
@@ -21,16 +26,8 @@
             type="email"
             class="form-control"
             id="inputEmail"
-            v-model="userEmail"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="inputPassword" class="form-label">كلمه المرور</label>
-          <input
-            type="password"
-            class="form-control"
-            id="inputPassword"
-            v-model="userPassword"
+            :value="auth.restaurantEmail"
+            disabled
           />
         </div>
         <div class="mb-3">
@@ -62,7 +59,7 @@
         <div class="mb-3">
           <label for="inputArea" class="form-label">المنطقه</label>
           <select class="form-select" v-model="userArea" id="inputArea">
-            <option disabled selected value="">حدد المنطقه</option>
+            <option disabled selected value="">حدد المطقه</option>
             <option value="shrouq">الشروق</option>
             <option value="ismailia">إسماعليه</option>
             <option value="suze">السويس</option>
@@ -141,17 +138,10 @@
             v-model="userDes"
           ></textarea>
         </div>
-        <button
-          type="submit"
-          class="btn btn-success mt-5 w-100"
-          :disabled="!btn"
-        >
-          تسجيل الحساب
+        <button type="submit" class="btn btn-success mt-5 w-100">
+          تعديل بيانات الحساب
         </button>
         <br />
-        <router-link to="login" class="mx-3 text-info"
-          >لدى حساب بالفعل</router-link
-        >
       </form>
     </div>
   </main>
@@ -159,31 +149,28 @@
 
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/auth";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { computed } from "@vue/runtime-core";
 import {
   getStorage,
   ref as refire,
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
-
 const router = useRouter();
 const auth = useAuthStore();
 
-const userName = ref("");
-const userEmail = ref("");
-const userPassword = ref("");
-const userDes = ref("");
-const userArea = ref("cairo");
-const userAdrres = ref("");
-const userImg = ref("");
-const userPhone = ref("");
-const userType = ref("");
-const startTime = ref("");
-const endTime = ref("");
-const map = ref("");
+const userName = ref(auth.restaurantName);
+const userDes = ref(auth.restaurantDes);
+const userArea = ref(auth.restaurantArea);
+const userAdrres = ref(auth.restaurantAdrres);
+const userImg = ref(auth.restaurantImg);
+const userPhone = ref(auth.restaurantPhone);
+const imgUpload = ref(0);
+const userType = ref(auth.restaurantType);
+const startTime = ref(auth.restaurantStartTime);
+const endTime = ref(auth.restaurantEndTime);
+const map = ref(auth.restaurantMap);
 const GoogleMapsURLToEmbedURL = computed(() => {
   var coords = /\@([0-9\.\,\-a-zA-Z]*)/.exec(map.value);
   if (coords != null) {
@@ -197,39 +184,15 @@ const GoogleMapsURLToEmbedURL = computed(() => {
     );
   }
 });
-
-const btn = ref(false);
-const imgUpload = ref(0);
-
-async function SaveUser() {
-  await auth.addUser(
+function SaveUser() {
+  auth.editUser(
     userName.value,
-    userEmail.value,
-    userPassword.value,
     userDes.value,
     userArea.value,
     userAdrres.value,
     userPhone.value,
-    userImg.value,
-    userType.value,
-    startTime.value,
-    endTime.value,
-    map.value
+    userImg.value
   );
-  userName.value = "";
-  userEmail.value = "";
-  userPassword.value = "";
-  userDes.value = "";
-  userArea.value = "";
-  userAdrres.value = "";
-  userPhone.value = "";
-  userImg.value = "";
-  userType.value = "";
-  startTime.value = "";
-  endTime.value = "";
-  map.value = "";
-  btn.value = false;
-  router.push("/");
 }
 
 function DetectFiles(img) {
@@ -250,8 +213,6 @@ function DetectFiles(img) {
     },
     () => {
       getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
-        btn.value = true;
-        console.log("File available at", URL);
         userImg.value = URL;
       });
     }
@@ -262,6 +223,12 @@ function DetectFiles(img) {
 <style lang="scss" scoped>
 h1 {
   font-size: 4rem;
+  color: #fff;
+  font-weight: bolder;
+}
+
+h2 {
+  font-size: 3rem;
   color: #fff;
   font-weight: bolder;
 }

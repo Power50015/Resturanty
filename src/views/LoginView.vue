@@ -47,8 +47,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const auth = useAuthStore();
 
-const userEmail = ref("");
-const userPassword = ref("");
+const userEmail = ref("jsr2@jsr2.com");
+const userPassword = ref("jsr2@jsr2.com");
 
 const btn = ref(false);
 
@@ -59,7 +59,7 @@ async function LoginUser() {
     );
     userEmail.value = "";
     userPassword.value = "";
-    router.push("/profile");
+    router.push("/");
   
 }
 

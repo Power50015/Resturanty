@@ -15,7 +15,7 @@
           </router-link>
         </li>
         <li class="nav-item mb-3">
-          <router-link to="/profile">
+          <router-link to="/">
             <div class="profile-box">
               <img
                 :src="auth.restaurantImg"
