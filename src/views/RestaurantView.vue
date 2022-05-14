@@ -2,30 +2,33 @@
   <main class="home-view">
     <div class="content">
       <div class="logo-section">
-        <h1 class="mb-3">المطاعم</h1>
-        <button class="btn btn-danger" @click="logout">تسجيل الخروج</button>
+        <img
+          :src="userData[0].img"
+          width="100"
+          height="100"
+          class="rounded-circle"
+        />
+        <h1 class="mb-3">المنيو</h1>
+        <router-link to="/" class="btn btn-success mx-3"
+          >المطاعم</router-link
+        >
       </div>
       <div class="container">
         <div class="row">
-          <div class="col-12 col-md-6 mb-3 text-center" v-for="i in restaurantsData" :key="i.index">
-            <router-link class="card w-100" style="width: 18rem" :to="'/restaurant/'+i.email">
-              <img :src="i.img" class="card-img-top" :alt="i.name" width="250" height="250" />
+          <div
+            class="col-12 col-md-6 mb-3"
+            v-for="i in menuData"
+            :key="i.index"
+          >
+            <div class="card w-100" style="width: 18rem">
+              <img :src="i.mealImg" class="card-img-top" :alt="i.mealTitle" />
               <div class="card-body">
-                <h5 class="card-title">{{i.name}}</h5>
+                <h5 class="card-title">{{ i.mealTitle }}</h5>
                 <p class="card-text">
-                  <ul>
-                      <li>مطعم {{i.type}}</li>
-                      <li>{{i.email}}</li>
-                      <li>{{i.phone}}</li>
-                      <li>{{i.area}}</li>
-                      <li>{{i.adrres}}</li>
-                      <li>مواعيد العمل من :{{i.startTime}}</li>
-                      <li>مواعيد العمل إلى :{{i.endTime}}</li>
-                      <li>{{i.des}}</li>
-                  </ul>
+                  {{ i.mealDes }}
                 </p>
               </div>
-            </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -36,31 +39,48 @@
 <script lang="ts" setup>
 import { useAuthStore } from "@/stores/auth";
 import { reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import app from "@/firebase";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
+const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
 const db = getFirestore();
 
-const restaurantsData = reactive([]);
+const restaurant = route.params.restaurant;
+const menuData = reactive([]);
 
-function logout() {
-  auth.logout();
-  router.push("/");
-}
-
-getImageData();
-async function getImageData() {
-  restaurantsData.length = 0;
-  const q = query(collection(db, "restaurants"));
+getMenuData();
+async function getMenuData() {
+  menuData.length = 0;
+  const q = query(
+    collection(db, "meals"),
+    where("mealrestaurant", "==", route.params.restaurant)
+  );
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
-    restaurantsData.push(doc.data());
+    menuData.push(doc.data());
   });
 }
+
+
+const userData = reactive([]);
+
+getUserData();
+async function getUserData() {
+  userData.length = 0;
+  const q = query(
+    collection(db, "restaurants"),
+    where("email", "==", route.params.restaurant)
+  );
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    userData.push(doc.data());
+  });
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -96,12 +116,5 @@ h1 {
     padding: 0;
     width: 100%;
   }
-}
-li {
-  padding: 5px;
-}
-a{
-  text-decoration: none;
-  color:#000
 }
 </style>
