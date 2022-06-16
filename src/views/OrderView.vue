@@ -13,6 +13,7 @@
                 <h5 class="card-title">وسيله الدفع : {{i.paymentMethod}}</h5>
                 <h5 class="card-title">تاريخ الوصول : {{i.day}} </h5>
                 <h5 class="card-title">وقت الوصول : {{i.time}} </h5>
+                <h5 class="card-title">عدد الأشخاص  : {{i.persons}} </h5>
                 <p class="card-text ">
                   <ul>
                       <li><img :src="i.user['Img']" :alt="i.user['Name']" width="100" height="100" class="rounded-circle mx-3"></li>

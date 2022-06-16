@@ -24,6 +24,7 @@
               <img :src="i.mealImg" class="card-img-top" :alt="i.mealTitle" />
               <div class="card-body">
                 <h5 class="card-title">{{ i.mealTitle }}</h5>
+                <h6 class="card-title badge bg-secondary"> السعر : {{ i.mealPrice }}</h6>
                 <p class="card-text">
                   {{ i.mealDes }}
                 </p>

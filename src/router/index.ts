@@ -39,7 +39,7 @@ const router = createRouter({
       component: () => import("../views/AdminLoginView.vue"),
     },
     {
-      path: "/restaurant/:restaurant",
+      path: "/restaurant/:restaurant/",
       name: "restaurant",
       component: () => import("../views/RestaurantView.vue"),
     },

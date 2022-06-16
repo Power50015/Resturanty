@@ -8,7 +8,7 @@
       <div class="container">
         <div class="row">
           <div class="col-12 col-md-6 mb-3 text-center" v-for="i in restaurantsData" :key="i.index">
-            <router-link class="card w-100" style="width: 18rem" :to="'/restaurant/'+i.email">
+            <router-link class="card w-100" style="width: 18rem" :to="'/restaurant/'+i.email+'/'">
               <img :src="i.img" class="card-img-top" :alt="i.name" width="250" height="250" />
               <div class="card-body">
                 <h5 class="card-title">{{i.name}}</h5>
