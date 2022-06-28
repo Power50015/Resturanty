@@ -61,13 +61,17 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
         auth.restaurantPhone = doc.data().phone;
         auth.restaurantType = doc.data().type;
         auth.restaurantStartTime = doc.data().startTime;
+        auth.restaurantStartTimePM = doc.data().startTimePM;
         auth.restaurantEndTime = doc.data().endTime;
+        auth.restaurantEndTimePM = doc.data().endTimePM;
         auth.restaurantMap = doc.data().map;
         auth.userType = "admin";
         auth.isloaded = true;
       });
     } else {
       querySnapshot.forEach((doc) => {
+        console.log(doc.data());
+        
         auth.restaurantId = doc.id;
         auth.isLogin = true;
         auth.restaurantName = doc.data().name;
@@ -79,7 +83,9 @@ const unsub = await onAuthStateChanged(auth, async (user) => {
         auth.restaurantPhone = doc.data().phone;
         auth.restaurantType = doc.data().type;
         auth.restaurantStartTime = doc.data().startTime;
+        auth.restaurantStartTimePM = doc.data().startTimePM;
         auth.restaurantEndTime = doc.data().endTime;
+        auth.restaurantEndTimePM = doc.data().endTimePM;
         auth.restaurantMap = doc.data().map;
         auth.userType = "restaurants";
         auth.isloaded = true;
@@ -107,10 +113,12 @@ export const useAuthStore = defineStore({
     restaurantPhone: "",
     restaurantType: "",
     restaurantStartTime: "",
+    restaurantStartTimePM: "",
     restaurantEndTime: "",
+    restaurantEndTimePM: "",
     restaurantMap: "",
     fileUpload: 0,
-    userType: ""
+    userType: "",
   }),
   actions: {
     addUser(
@@ -124,7 +132,9 @@ export const useAuthStore = defineStore({
       img: string,
       type: string,
       startTime: string,
+      startTimePM: string,
       endTime: string,
+      endTimePM: string,
       map: string
     ): any {
       this.isloaded = false;
@@ -143,8 +153,10 @@ export const useAuthStore = defineStore({
             phone: phone,
             type: type,
             startTime: startTime,
+            startTimePM: startTimePM,
             endTime: endTime,
-            map: map
+            endTimePM: endTimePM,
+            map: map,
           }).then((user) => {
             this.restaurantId = user.id;
             this.isLogin = true;
@@ -157,7 +169,9 @@ export const useAuthStore = defineStore({
             this.restaurantPhone = phone;
             this.restaurantType = type;
             this.restaurantStartTime = startTime;
+            this.restaurantStartTimePM = startTimePM;
             this.restaurantEndTime = endTime;
+            this.restaurantEndTimePM = endTimePM;
             this.restaurantMap = map;
             this.isloaded = true;
             this.userType = "restaurants";
@@ -194,7 +208,9 @@ export const useAuthStore = defineStore({
             this.restaurantPhone = doc.data().phone;
             this.restaurantType = doc.data().type;
             this.restaurantStartTime = doc.data().startTime;
+            this.restaurantStartTimePM = doc.data().startTimePM;
             this.restaurantEndTime = doc.data().endTime;
+            this.restaurantEndTimePM = doc.data().endTime;
             this.restaurantMap = doc.data().map;
             this.isloaded = true;
             this.userType = "restaurants";
@@ -212,10 +228,7 @@ export const useAuthStore = defineStore({
       this.isloaded = false;
       signInWithEmailAndPassword(auth, email, password)
         .then(async () => {
-          const q = query(
-            collection(db, "admin"),
-            where("email", "==", email)
-          );
+          const q = query(collection(db, "admin"), where("email", "==", email));
 
           const querySnapshot = await getDocs(q);
           querySnapshot.forEach((doc) => {
@@ -258,7 +271,13 @@ export const useAuthStore = defineStore({
       area: string,
       adrres: string,
       phone: string,
-      img: string
+      img: string,
+      type: string,
+      startTime: string,
+      startTimePM: string,
+      endTime: string,
+      endTimePM: string,
+      map: string
     ) {
       await setDoc(doc(db, "restaurants", this.restaurantId), {
         name: name,
@@ -268,6 +287,12 @@ export const useAuthStore = defineStore({
         des: des,
         img: img,
         phone: phone,
+        type: type,
+        startTime: startTime,
+        startTimePM: startTimePM,
+        endTime: endTime,
+        endTimePM: endTimePM,
+        map: map,
       }).then((user) => {
         this.restaurantName = name;
         this.restaurantAdrres = adrres;
@@ -275,6 +300,12 @@ export const useAuthStore = defineStore({
         this.restaurantDes = des;
         this.restaurantImg = img;
         this.restaurantPhone = phone;
+        this.restaurantType = type;
+        this.restaurantStartTime = startTime;
+        this.restaurantStartTimePM = startTimePM;
+        this.restaurantEndTime = endTime;
+        this.restaurantEndTimePM = endTimePM;
+        this.restaurantMap = map;
       });
     },
     addMeal(
@@ -289,7 +320,7 @@ export const useAuthStore = defineStore({
         mealImg: mealImg,
         mealPrice: mealPrice,
         mealDes: mealDes,
-        mealrestaurant: this.restaurantEmail
+        mealrestaurant: this.restaurantEmail,
       })
         .then((user) => {
           this.isloaded = true;

@@ -113,20 +113,32 @@
           <label class="form-label">مواعيد العمل</label>
           <div class="row">
             <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                id="startTime"
-                v-model="startTime"
-              />
+              <div class="d-flex">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="startTime"
+                  v-model="startTime"
+                />
+                <select class="form-select" v-model="startTimePM">
+                  <option value="ص">ص</option>
+                  <option value="م">م</option>
+                </select>
+              </div>
             </div>
             <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                id="endTime"
-                v-model="endTime"
-              />
+              <div class="d-flex">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="startTime"
+                  v-model="endTime"
+                />
+                <select class="form-select" v-model="endTimePM">
+                  <option value="ص">ص</option>
+                  <option value="م">م</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -169,7 +181,9 @@ const userPhone = ref(auth.restaurantPhone);
 const imgUpload = ref(0);
 const userType = ref(auth.restaurantType);
 const startTime = ref(auth.restaurantStartTime);
+const startTimePM = ref(auth.restaurantStartTimePM);
 const endTime = ref(auth.restaurantEndTime);
+const endTimePM = ref(auth.restaurantEndTimePM);
 const map = ref(auth.restaurantMap);
 const GoogleMapsURLToEmbedURL = computed(() => {
   var coords = /\@([0-9\.\,\-a-zA-Z]*)/.exec(map.value);
@@ -191,7 +205,13 @@ function SaveUser() {
     userArea.value,
     userAdrres.value,
     userPhone.value,
-    userImg.value
+    userImg.value,
+    userType.value,
+    startTime.value,
+    startTimePM.value,
+    endTime.value,
+    endTimePM.value,
+    map.value
   );
 }
 

@@ -116,20 +116,32 @@
           <label class="form-label">مواعيد العمل</label>
           <div class="row">
             <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                id="startTime"
-                v-model="startTime"
-              />
+              <div class="d-flex">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="startTime"
+                  v-model="startTime"
+                />
+                <select class="form-select" v-model="startTimePM">
+                  <option value="ص">ص</option>
+                  <option value="م">م</option>
+                </select>
+              </div>
             </div>
             <div class="col-6">
-              <input
-                type="number"
-                class="form-control"
-                id="endTime"
-                v-model="endTime"
-              />
+              <div class="d-flex">
+                <input
+                  type="number"
+                  class="form-control"
+                  id="startTime"
+                  v-model="endTime"
+                />
+                <select class="form-select" v-model="endTimePM">
+                  <option value="ص">ص</option>
+                  <option value="م">م</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -182,7 +194,9 @@ const userImg = ref("");
 const userPhone = ref("");
 const userType = ref("");
 const startTime = ref("");
+const startTimePM = ref("ص");
 const endTime = ref("");
+const endTimePM = ref("م");
 const map = ref("");
 const GoogleMapsURLToEmbedURL = computed(() => {
   var coords = /\@([0-9\.\,\-a-zA-Z]*)/.exec(map.value);
@@ -213,7 +227,9 @@ async function SaveUser() {
     userImg.value,
     userType.value,
     startTime.value,
+    startTimePM.value,
     endTime.value,
+    endTimePM.value,
     map.value
   );
   userName.value = "";
@@ -226,7 +242,9 @@ async function SaveUser() {
   userImg.value = "";
   userType.value = "";
   startTime.value = "";
+  startTimePM.value = "ص";
   endTime.value = "";
+  endTimePM.value = "م";
   map.value = "";
   btn.value = false;
   router.push("/");
